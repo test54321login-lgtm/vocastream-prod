@@ -1,0 +1,32 @@
+{
+  "name": "vocastream",
+  "version": "1.0.0",
+  "description": "VOCASTREAM - Text-to-Speech Platform with Natural Voice AI",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm run dev",
+    "install:all": "cd backend && npm install && cd frontend && npm install",
+    "build": "echo 'Ready for production deployment'",
+    "production": "NODE_ENV=production cd backend && npm start"
+  },
+  "keywords": [
+    "text-to-speech",
+    "speech-synthesis",
+    "voice-cloning",
+    "ai",
+    "mms-tts"
+  ],
+  "author": "VOCASTREAM",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
