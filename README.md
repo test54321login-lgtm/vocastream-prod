@@ -108,7 +108,32 @@ vocastream/
 
 ## 🐳 Deployment
 
-### Docker
+### Option 1: Vercel (Frontend) + Railway (Backend)
+
+#### Backend (Railway):
+1. Create account at railway.app
+2. Connect GitHub repository
+3. Set environment variables:
+   - `MONGO_URI`: Your MongoDB Atlas URI
+   - `JWT_SECRET`: Generate strong secret
+   - `KAGGLE_URL`: Your Kaggle AI endpoint
+   - `INTERNAL_SECRET`: Your internal secret
+   - `FRONTEND_URL`: Your Vercel URL (e.g., https://vocastream.vercel.app)
+   - `SERVE_FRONTEND`: false
+4. Deploy command: `npm start`
+
+#### Frontend (Vercel):
+1. Create account at vercel.com
+2. Import GitHub repository
+3. Set environment variables:
+   - `VITE_API_URL`: Your Railway backend URL (e.g., https://your-app.railway.app)
+4. Deploy
+
+### Option 2: Vercel (Frontend) + Render (Backend)
+
+Same as above, but deploy backend to Render.com instead of Railway.
+
+### Option 3: Docker
 
 ```bash
 docker build -t vocastream .

@@ -204,9 +204,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-// --- STATIC FILE SERVING (Production) ---
-// In production, serve the frontend static files from the same server
-if (process.env.NODE_ENV === 'production') {
+// --- STATIC FILE SERVING (Optional - for same-origin deployment) ---
+// Only serve static files if SERVE_FRONTEND=true (not needed for Vercel + Railway)
+if (process.env.SERVE_FRONTEND === 'true') {
+  console.log('📦 Serving frontend from backend (same-origin mode)');
   const frontendPath = path.join(__dirname, '..', 'frontend');
   app.use(express.static(frontendPath));
   
@@ -216,6 +217,8 @@ if (process.env.NODE_ENV === 'production') {
       res.sendFile(path.join(frontendPath, 'index.html'));
     }
   });
+} else {
+  console.log('🎯 API-only mode (for Vercel + Railway/Render deployment)');
 }
 
 // --- 6. DATABASE CONNECTION & SERVER START ---
