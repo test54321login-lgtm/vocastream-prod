@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VOCASTREAM | Create Your Sonic Identity</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#005f64",
+              "secondary": "#00d9ff",
+              "secondary-container": "#00687b",
+              "on-tertiary-fixed": "#001930",
+              "on-surface-variant": "#abaaaf",
+              "surface-container-highest": "#24262a",
+              "secondary-dim": "#00caed",
+              "tertiary-container": "#4da8fe",
+              "primary-fixed-dim": "#00e2ee",
+              "secondary-fixed-dim": "#00d6fb",
+              "error-dim": "#d7383b",
+              "on-background": "#faf8fd",
+              "error-container": "#9f0519",
+              "tertiary-dim": "#47a2f8",
+              "on-primary-container": "#00555a",
+              "background": "#0d0e11",
+              "tertiary-fixed-dim": "#4da8fe",
+              "surface-tint": "#99f7ff",
+              "surface-dim": "#0d0e11",
+              "tertiary-fixed": "#6fb5ff",
+              "tertiary": "#6fb5ff",
+              "on-primary-fixed-variant": "#006065",
+              "primary-dim": "#00e2ee",
+              "on-secondary-container": "#ecfaff",
+              "on-tertiary-container": "#002746",
+              "inverse-surface": "#faf8fd",
+              "on-error-container": "#ffa8a3",
+              "surface-container-high": "#1e1f24",
+              "on-surface": "#faf8fd",
+              "on-secondary-fixed-variant": "#005969",
+              "on-tertiary-fixed-variant": "#003b66",
+              "surface-bright": "#2b2c31",
+              "surface-container-lowest": "#000000",
+              "primary-fixed": "#00f1fe",
+              "outline-variant": "#47484b",
+              "outline": "#757579",
+              "on-secondary-fixed": "#003a46",
+              "primary": "#99f7ff",
+              "surface": "#0d0e11",
+              "surface-container": "#18191d",
+              "surface-container-low": "#121317",
+              "on-primary-fixed": "#004145",
+              "inverse-primary": "#006a70",
+              "on-error": "#490006",
+              "surface-variant": "#24262a",
+              "primary-container": "#00f1fe",
+              "on-secondary": "#004755",
+              "on-tertiary": "#003258",
+              "secondary-fixed": "#6ce1ff",
+              "error": "#ff716c",
+              "inverse-on-surface": "#545558"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .ease-out-expo {
+        transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+      }
+      .glass-morphism {
+        background: rgba(36, 38, 42, 0.4);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+      .ghost-border {
+        outline: 1px solid rgba(71, 72, 75, 0.15);
+      }
+      /* Layering for Animation */
+      .layer-bg { z-index: 0; }
+      .layer-character { z-index: 5; } /* New layer for the character */
+      .layer-glass { z-index: 10; }
+      .layer-logo { z-index: 20; }
+      .layer-form { z-index: 30; }
+      .layer-footer { z-index: 40; }
+
+      /* Animation for the character peeking */
+      @keyframes slow-peek {
+        0%, 100% { transform: translateX(0) scale(1); }
+        50% { transform: translateX(10px) scale(1.02); }
+      }
+      .animate-peek {
+        animation: slow-peek 8s ease-in-out infinite;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- LAYER 1: Background Elements -->
+<div class="fixed inset-0 layer-bg">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/5 blur-[100px] rounded-full"></div>
+<!-- Decorative Grid for Depth -->
+<div class="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+</div>
+<!-- LAYER 1.5: Character Layer (High-quality 3D Model) -->
+<div class="fixed inset-0 layer-character pointer-events-none flex items-center justify-center">
+<div class="relative w-full max-w-[1440px] h-full">
+<!-- Character positioned to peek from the right of the central form -->
+<div class="absolute right-[15%] md:right-[22%] bottom-0 h-[85vh] animate-peek">
+<img alt="Realistic 3D Cyber Boy Model, Ash Silver Hair, Premium Techwear, Lumina Cyber Theme" class="h-full w-auto object-contain drop-shadow-[0_0_50px_rgba(153,247,255,0.2)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0DJiuwJ17PdEffoyLey_i4QZlWLBqGwWRWApJZe2olXr9G17_2Yoqrzj36aOS07Qzp5scneXRqZhbixb21PjZPWM1VRyLsdXdTzYSBEdDXjYfhtqZD7MY-OHgyxFi8SDGbQT7D-Z6DvL1fIGpf4jNBNlStGTcATiHkUTJakKGVuiOOHWsXvy7B5dXKWOXWs4mHEpMipXpiIROgUaXqLZ0z-iDhoeAMiS1ttfP90tFM1BXN3gBQvSA9s4VmPIM1Qxap74dgxULHSR6"/>
+<!-- Overlay to blend character better into the 'Lumina' atmosphere -->
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+</div>
+</div>
+</div>
+<!-- LAYER 2: Logo Layer (Floating Header) -->
+<header class="top-0 w-full layer-logo flex items-center max-w-[1440px] mx-auto left-0 right-0 gap-4 pt-12 pb-8 relative justify-center">
+<div class="flex items-center gap-2 group cursor-pointer transition-transform duration-500 ease-out-expo hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,217,255,0.3)]">
+<span class="material-symbols-outlined text-on-primary font-bold">graphic_eq</span>
+</div>
+<span class="font-headline font-black tracking-tighter text-3xl text-on-surface">VOCASTREAM</span>
+</div>
+<a class="absolute top-8 right-8 md:top-12 md:right-12 flex items-center gap-2 px-5 py-2.5 bg-surface-variant/30 backdrop-blur-md border border-primary/20 rounded-full text-on-surface hover:bg-surface-variant/50 hover:border-primary/40 transition-all duration-300 group shadow-lg" href="index.html">
+<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform duration-300">arrow_back</span>
+<span class="text-xs font-bold uppercase tracking-widest">Back to Home</span>
+</a><a class="font-label text-sm tracking-widest text-on-surface/60 hover:text-primary transition-colors duration-300" href="#">
+        LOG IN
+    </a>
+</header>
+<main class="flex-grow flex items-center justify-center px-6 py-24 relative">
+<div class="w-full max-w-[480px] relative">
+<!-- LAYER 3: Glass Container -->
+<div class="absolute inset-0 glass-morphism ghost-border rounded-lg shadow-[0_40px_100px_rgba(0,0,0,0.4)] layer-glass"></div>
+<!-- LAYER 4: Form Elements & Content -->
+<div class="relative p-8 md:p-12 layer-form">
+<!-- Headline -->
+<div class="mb-10 text-center">
+<h1 class="font-headline text-4xl font-bold tracking-[0.04em] uppercase mb-3 text-on-surface">
+                    Join The Stream
+                </h1>
+<p class="text-on-surface-variant font-body text-sm tracking-wide">
+                    Architect your digital voice signature today.
+                </p>
+</div>
+<!-- Registration Form -->
+<form id="signup-form" class="space-y-6" onsubmit="handleSignUp(event)">
+<!-- Legal Name -->
+<div class="space-y-2">
+<label class="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface/50 ml-4">Legal Name</label>
+<div class="relative group">
+<input id="signup-name" name="name" class="w-full bg-surface-container-highest border-none rounded-full px-6 py-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-2 focus:ring-secondary/50 transition-all duration-300 ease-out-expo font-body text-sm outline-none" placeholder="John Doe" type="text" required/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-focus-within:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-secondary text-lg">person</span>
+</div>
+</div>
+</div>
+<!-- Email Address -->
+<div class="space-y-2">
+<label class="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface/50 ml-4">Email Address</label>
+<div class="relative group">
+<input id="signup-email" name="email" class="w-full bg-surface-container-highest border-none rounded-full px-6 py-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-2 focus:ring-secondary/50 transition-all duration-300 ease-out-expo font-body text-sm outline-none" placeholder="architect@voca.stream" type="email" required/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-focus-within:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-secondary text-lg">alternate_email</span>
+</div>
+</div>
+</div>
+<!-- Password -->
+<div class="space-y-2">
+<label class="font-label text-[10px] tracking-[0.2em] uppercase text-on-surface/50 ml-4">Password</label>
+<div class="relative group">
+<input id="signup-password" name="password" class="w-full bg-surface-container-highest border-none rounded-full px-6 py-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-2 focus:ring-secondary/50 transition-all duration-300 ease-out-expo font-body text-sm outline-none" placeholder="••••••••••••" type="password" required/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-focus-within:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-secondary text-lg">lock</span>
+</div>
+</div>
+</div>
+<!-- Primary Action -->
+<button id="signup-submit-btn" class="w-full bg-gradient-to-r from-primary to-secondary text-on-primary font-headline font-extrabold tracking-[0.1em] py-5 rounded-full shadow-[0_10px_30px_rgba(0,217,255,0.3)] hover:shadow-[0_15px_40px_rgba(0,217,255,0.5)] active:scale-[0.98] transition-all duration-300 ease-out-expo mt-4 uppercase" type="submit">
+                    CREATE ACCOUNT
+                </button>
+</form>
+<!-- Footer Links inside card for grouping -->
+<div class="mt-10 text-center">
+<p class="font-label text-[10px] text-on-surface-variant/40 leading-relaxed max-w-[280px] mx-auto uppercase tracking-widest">
+                    By creating an account, you agree to our 
+                    <a class="text-secondary hover:underline" href="#">Terms</a> 
+                    and 
+                    <a class="text-secondary hover:underline" href="#">Privacy Policy</a>.
+                </p>
+</div>
+</div>
+<!-- Contextual Navigation (Outside glass for separate motion) -->
+<div class="mt-8 text-center relative z-20">
+<p class="font-body text-sm text-on-surface-variant">
+                Already an architect? 
+                <a class="text-primary font-semibold hover:text-secondary-dim transition-colors ml-1" href="sign-in.html">Sign In</a>
+</p>
+</div>
+</div>
+</main>
+<!-- LAYER 5: Global Footer -->
+<footer class="w-full py-12 px-8 border-t border-[#47484b]/15 bg-[#0d0e11] relative layer-footer">
+<div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="text-lg font-bold text-[#faf8fd] font-headline uppercase tracking-tight">
+            VOCASTREAM
+        </div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-['Inter'] text-xs tracking-wider text-[#faf8fd]/40 hover:text-[#99f7ff] transition-colors duration-200" href="#">Privacy</a>
+<a class="font-['Inter'] text-xs tracking-wider text-[#faf8fd]/40 hover:text-[#99f7ff] transition-colors duration-200" href="#">Terms</a>
+<a class="font-['Inter'] text-xs tracking-wider text-[#faf8fd]/40 hover:text-[#99f7ff] transition-colors duration-200" href="#">Twitter</a>
+<a class="font-['Inter'] text-xs tracking-wider text-[#faf8fd]/40 hover:text-[#99f7ff] transition-colors duration-200" href="#">LinkedIn</a>
+<a class="font-['Inter'] text-xs tracking-wider text-[#faf8fd]/40 hover:text-[#99f7ff] transition-colors duration-200" href="#">GitHub</a>
+</div>
+<div class="font-['Inter'] text-xs tracking-wider text-[#faf8fd]/50">
+            © 2026 VOCASTREAM. ARCHITECTING SOUND.
+        </div>
+</div>
+</footer>
+<!-- Invisible Assets for Reference -->
+<div class="hidden">
+<img data-alt="Cyberpunk abstract digital background with glowing blue nodes and network lines in a deep obsidian space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtyJWvfFx7gxVnAslIeE2q4GIhysM-WDUTczWEICpj4fsN-VekYo-uHjzSS2fu1DoogyhkzCJVNZPSVznTMq5of1sg-CuKR4hXJKiuXaZLt9ewkyLW4_dTWFl-gtdhHnzwGiXSIxjPn6Muj3CJRWsz_OY_Q7JKCg_4bd7_AOKgqE0RcGDSvb8wnxvidDYReoVywkE8v9jss_WQ63LE_UaTAsKPocpaJGNVDAaRQqfOeEZz0Jo6qGMnXMnAJliyi6Lk_5wUynfwrDf3"/>
+<img data-alt="High fidelity audio waveform visualization with vibrant cyan and magenta light trails on a dark matte surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0z3kbKrh68a9rhYKNDGC1kRl0MCN4YdHGs6jxli5FqTTTA4rIZc3WUbe3NiV_Vx40OubeD6ZG8MB-L8m7-tnTcpLYmdxIxbGby_oSZXPIgTIP1rdaEsTAQ8G6kAWyZwfIszapcvEq8H3b9Ymg40iHppSgVasFUD9ZdthbDBUvTgA8rsqRImTpmQZBz7T5vPJbcj5gFqKe0cW9v8MfEHJjtKvloYnZaFk_Fkoe3mzR-YKfYDGKEOVGN_NkGdtvmJ8fp79ZT1o9eMng"/>
+</div>
+<script src="app.js"></script>
+</body></html>

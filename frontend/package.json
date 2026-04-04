@@ -1,0 +1,26 @@
+{
+  "name": "vocastream",
+  "version": "1.0.0",
+  "description": "VOCASTREAM - Architecting Sound. A text-to-speech platform with Web Speech API and Natural Voice API integration.",
+  "main": "app.js",
+  "scripts": {
+    "dev": "live-server . --port=3000 --open=/index.html",
+    "start": "live-server . --port=3000 --open=/index.html",
+    "build": "echo 'No build step required for static files'"
+  },
+  "keywords": [
+    "text-to-speech",
+    "speech-synthesis",
+    "web-speech-api",
+    "ocr",
+    "tesseract"
+  ],
+  "author": "VOCASTREAM",
+  "license": "MIT",
+  "dependencies": {
+    "tesseract.js": "^4.1.1"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

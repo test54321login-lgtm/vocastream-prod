@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VOCASTREAM | Sign In</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary": "#005f64",
+                        "secondary": "#00d9ff",
+                        "secondary-container": "#00687b",
+                        "on-tertiary-fixed": "#001930",
+                        "on-surface-variant": "#abaaaf",
+                        "surface-container-highest": "#24262a",
+                        "secondary-dim": "#00caed",
+                        "tertiary-container": "#4da8fe",
+                        "primary-fixed-dim": "#00e2ee",
+                        "secondary-fixed-dim": "#00d6fb",
+                        "error-dim": "#d7383b",
+                        "on-background": "#faf8fd",
+                        "error-container": "#9f0519",
+                        "tertiary-dim": "#47a2f8",
+                        "on-primary-container": "#00555a",
+                        "background": "#0d0e11",
+                        "tertiary-fixed-dim": "#4da8fe",
+                        "surface-tint": "#99f7ff",
+                        "surface-dim": "#0d0e11",
+                        "tertiary-fixed": "#6fb5ff",
+                        "tertiary": "#6fb5ff",
+                        "on-primary-fixed-variant": "#006065",
+                        "primary-dim": "#00e2ee",
+                        "on-secondary-container": "#ecfaff",
+                        "on-tertiary-container": "#002746",
+                        "inverse-surface": "#faf8fd",
+                        "on-error-container": "#ffa8a3",
+                        "surface-container-high": "#1e1f24",
+                        "on-surface": "#faf8fd",
+                        "on-secondary-fixed-variant": "#005969",
+                        "on-tertiary-fixed-variant": "#003b66",
+                        "surface-bright": "#2b2c31",
+                        "surface-container-lowest": "#000000",
+                        "primary-fixed": "#00f1fe",
+                        "outline-variant": "#47484b",
+                        "outline": "#757579",
+                        "on-secondary-fixed": "#003a46",
+                        "primary": "#99f7ff",
+                        "surface": "#0d0e11",
+                        "surface-container": "#18191d",
+                        "surface-container-low": "#121317",
+                        "on-primary-fixed": "#004145",
+                        "inverse-primary": "#006a70",
+                        "on-error": "#490006",
+                        "surface-variant": "#24262a",
+                        "primary-container": "#00f1fe",
+                        "on-secondary": "#004755",
+                        "on-tertiary": "#003258",
+                        "secondary-fixed": "#6ce1ff",
+                        "error": "#ff716c",
+                        "inverse-on-surface": "#545558"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .ease-out-expo {
+            transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .bg-noise {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        /* Jitter-ready Layering */
+        .layer-1-atmosphere { z-index: 0; }
+        .layer-2-character { z-index: 10; }
+        .layer-3-ui-shell { z-index: 20; }
+        .layer-4-glass { z-index: 30; }
+        .layer-5-content { z-index: 40; }
+
+        @keyframes slow-peek {
+            0%, 100% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(15px) scale(1.01); }
+        }
+        .animate-peek {
+            animation: slow-peek 10s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col selection:bg-secondary/30 relative overflow-x-hidden">
+<!-- LAYER 1: BACKGROUND ATMOSPHERE -->
+<div class="fixed inset-0 layer-1-atmosphere pointer-events-none overflow-hidden" id="layer-background-atmosphere">
+<div class="absolute inset-0 bg-noise opacity-[0.03] mix-blend-overlay"></div>
+<div class="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-secondary/10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-primary/5 blur-[100px] rounded-full"></div>
+<div class="absolute inset-0 opacity-[0.02] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+</div>
+<!-- LAYER 2: CHARACTER MODEL (3D Boy from SCREEN_31) -->
+<div class="fixed inset-0 layer-2-character pointer-events-none flex items-center justify-center" id="layer-character-model">
+<div class="relative w-full max-w-[1440px] h-full">
+<!-- Positioned to peek from the side of the glass card -->
+<div class="absolute right-[10%] md:right-[20%] bottom-0 h-[90vh] animate-peek opacity-80 mix-blend-lighten">
+<img alt="Realistic 3D Cyber Boy Model" class="h-full w-auto object-contain drop-shadow-[0_0_80px_rgba(153,247,255,0.15)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0DJiuwJ17PdEffoyLey_i4QZlWLBqGwWRWApJZe2olXr9G17_2Yoqrzj36aOS07Qzp5scneXRqZhbixb21PjZPWM1VRyLsdXdTzYSBEdDXjYfhtqZD7MY-OHgyxFi8SDGbQT7D-Z6DvL1fIGpf4jNBNlStGTcATiHkUTJakKGVuiOOHWsXvy7B5dXKWOXWs4mHEpMipXpiIROgUaXqLZ0z-iDhoeAMiS1ttfP90tFM1BXN3gBQvSA9s4VmPIM1Qxap74dgxULHSR6"/>
+<!-- Subtle gradient overlay for character depth -->
+<div class="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent"></div>
+</div>
+</div>
+</div>
+<!-- LAYER 3: UI CONTENT SHELL (Logo & Global Footer) -->
+<div class="relative layer-3-ui-shell flex flex-col min-h-screen" id="layer-ui-shell">
+<header class="flex justify-center pt-12 pb-8 relative">
+<div class="flex items-center gap-2 group cursor-pointer transition-transform duration-500 ease-out-expo hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,217,255,0.3)]">
+<span class="material-symbols-outlined text-on-primary font-bold" data-icon="graphic_eq">graphic_eq</span>
+</div>
+<span class="font-headline font-black tracking-tighter text-3xl text-on-surface">VOCASTREAM</span>
+</div>
+<a class="absolute top-8 right-8 md:top-12 md:right-12 flex items-center gap-2 px-5 py-2.5 bg-surface-variant/30 backdrop-blur-md border border-primary/20 rounded-full text-on-surface hover:bg-surface-variant/50 hover:border-primary/40 transition-all duration-300 group shadow-lg" href="index.html">
+<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform duration-300">arrow_back</span>
+<span class="text-xs font-bold uppercase tracking-widest">Back to Home</span>
+</a></header>
+<main class="flex-grow flex items-center justify-center px-6 pb-20">
+<div class="w-full max-w-[480px] relative">
+<!-- LAYER 4: GLASSMORPHIC CARD -->
+<div class="absolute inset-0 layer-4-glass bg-surface-variant/30 backdrop-blur-3xl rounded-xl border border-outline-variant/15 shadow-[0_40px_100px_rgba(0,0,0,0.5)]"></div>
+<!-- LAYER 5: TEXT/FORM ELEMENTS -->
+<div class="relative layer-5-content p-8 md:p-12 overflow-hidden group">
+<!-- Inner Glow Ornament -->
+<div class="absolute -top-24 -left-24 w-48 h-48 bg-secondary/10 blur-[60px] rounded-full group-hover:bg-secondary/20 transition-colors duration-700 pointer-events-none"></div>
+<div class="relative z-10 text-center mb-10">
+<h1 class="font-headline text-4xl font-bold tracking-tight mb-3">Architecting Sound.</h1>
+<p class="text-on-surface-variant font-medium tracking-wide text-sm uppercase">Sign in to your studio portal</p>
+</div>
+<div class="relative z-10">
+<form id="signin-form" class="space-y-6" onsubmit="handleSignIn(event)">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block text-xs font-bold tracking-[0.1em] text-on-surface-variant uppercase ml-4" for="email">Neural ID / Email</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-secondary transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]" data-icon="alternate_email">alternate_email</span>
+</div>
+<input class="w-full bg-surface-container-highest/60 border-none rounded-full py-4 pl-14 pr-6 text-on-surface placeholder:text-outline transition-all duration-300 focus:ring-2 focus:ring-secondary/30 focus:bg-surface-container-highest outline-none" id="signin-email" name="email" placeholder="architect@vocastream.ai" type="email" required/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="block text-xs font-bold tracking-[0.1em] text-on-surface-variant uppercase ml-4" for="password">Access Key / Password</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-secondary transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]" data-icon="lock">lock</span>
+</div>
+<input class="w-full bg-surface-container-highest/60 border-none rounded-full py-4 pl-14 pr-14 text-on-surface placeholder:text-outline transition-all duration-300 focus:ring-2 focus:ring-secondary/30 focus:bg-surface-container-highest outline-none" id="signin-password" name="password" placeholder="••••••••" type="password" required/>
+<button class="absolute inset-y-0 right-5 flex items-center text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Options -->
+<div class="flex items-center justify-between px-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center">
+<input id="stay-signed-in" class="peer appearance-none w-5 h-5 rounded-full border border-outline-variant bg-surface-container-highest checked:bg-secondary checked:border-secondary transition-all cursor-pointer" type="checkbox"/>
+<span class="material-symbols-outlined absolute text-[14px] text-on-primary opacity-0 peer-checked:opacity-100 left-1/2 -translate-x-1/2 pointer-events-none" data-icon="check">check</span>
+</div>
+<span class="text-sm font-medium text-on-surface-variant group-hover:text-on-surface transition-colors">Stay signed in</span>
+</label>
+<a class="text-sm font-semibold text-secondary hover:text-primary transition-colors duration-200" href="#">Forgot password?</a>
+</div>
+<!-- Primary Action -->
+<div class="pt-4">
+<button id="signin-submit-btn" class="w-full bg-gradient-to-r from-primary to-secondary text-on-primary font-headline font-extrabold tracking-widest text-sm py-5 rounded-full shadow-[0_10px_30px_-5px_rgba(0,217,255,0.4)] hover:shadow-[0_15px_40px_-5px_rgba(0,217,255,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ease-out-expo uppercase" type="submit">
+                                ACCESS STUDIO
+                            </button>
+</div>
+</form>
+<!-- Footer Link inside Card -->
+<div class="mt-10 text-center">
+<p class="text-on-surface-variant text-sm font-medium">
+                            New to the frequency? 
+                            <a class="text-on-surface font-bold hover:text-secondary transition-colors ml-1 decoration-secondary/30 decoration-2 underline-offset-4 underline" href="sign-up.html">Create account</a>
+</p>
+</div>
+</div>
+</div>
+<!-- Accessibility/Legal Footer -->
+<div class="mt-8 flex flex-wrap justify-center gap-6 opacity-40 hover:opacity-100 transition-opacity duration-500 relative z-20">
+<a class="text-[10px] font-bold tracking-[0.2em] uppercase hover:text-secondary transition-colors" href="#">Privacy</a>
+<a class="text-[10px] font-bold tracking-[0.2em] uppercase hover:text-secondary transition-colors" href="#">Legal</a>
+<a class="text-[10px] font-bold tracking-[0.2em] uppercase hover:text-secondary transition-colors" href="#">Terms</a>
+</div>
+</div>
+</main>
+<footer class="py-8 px-8 border-t border-outline-variant/10 mt-auto">
+<div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label text-[10px] tracking-widest text-on-surface-variant uppercase">© 2026 VOCASTREAM. ARCHITECTING SOUND.</p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-secondary cursor-pointer transition-colors text-[18px]" data-icon="headset">headset</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-secondary cursor-pointer transition-colors text-[18px]" data-icon="language">language</span>
+</div>
+</div>
+</footer>
+</div>
+<script src="app.js"></script>
+</body></html>
