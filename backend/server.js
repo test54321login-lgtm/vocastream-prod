@@ -222,12 +222,12 @@ if (process.env.SERVE_FRONTEND === 'true') {
 }
 
 // --- 6. DATABASE CONNECTION & SERVER START ---
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 7860;
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB connected successfully');
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       if (process.env.NODE_ENV === 'production') {
         console.log(`🚀 VOCASTREAM Production: http://localhost:${PORT}`);
       } else {

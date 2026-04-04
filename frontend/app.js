@@ -10,7 +10,9 @@
 // Configuration Constants
 // Production: Uses window.API_BASE_URL if set (for Vercel/Railway/Render)
 // Development: Uses localhost:3001
-// Also supports VITE_API_URL env var for Vite builds
+// API Configuration - supports environment variable for production deployment
+// Local development: http://localhost:3001
+// Production (Hugging Face): https://your-space.hf.space
 const API_URL = window.API_BASE_URL || window.VITE_API_URL || 'http://localhost:3001/api';
 
 
