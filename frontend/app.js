@@ -8,12 +8,9 @@
  */
 
 // Configuration Constants
-// Production: Uses window.API_BASE_URL if set (for Vercel/Railway/Render)
-// Development: Uses localhost:3001
-// API Configuration - supports environment variable for production deployment
-// Local development: http://localhost:3001
-// Production (Hugging Face): https://your-space.hf.space
-const API_URL = window.API_BASE_URL || window.VITE_API_URL || 'http://localhost:3001/api';
+// Production: Uses window.API_BASE_URL (set by Vercel env) or relative /api (proxied to backend)
+// Development: Uses localhost:7860
+const API_URL = window.API_BASE_URL || (window.location.protocol + '//' + window.location.host + '/api');
 
 
 const CONFIG = {
@@ -1006,7 +1003,7 @@ function setAPIConfig(apiEndpoint, apiKey) {
 async function handleSignIn(event) {
   event.preventDefault();
   
-  const email = document.getElementById('signin-email').value;
+  const email = document.getElementById('signin-email').value.toLowerCase();
   const password = document.getElementById('signin-password').value;
   
   // Basic validation
@@ -1060,7 +1057,7 @@ async function handleSignUp(event) {
   event.preventDefault();
   
   const name = document.getElementById('signup-name').value;
-  const email = document.getElementById('signup-email').value;
+  const email = document.getElementById('signup-email').value.toLowerCase();
   const password = document.getElementById('signup-password').value;
   
   // Basic validation
@@ -1076,9 +1073,21 @@ async function handleSignUp(event) {
     return;
   }
   
-  // Password validation (minimum 6 characters)
-  if (password.length < 6) {
-    showError('Password must be at least 6 characters long');
+  // Password validation (minimum 8 characters with complexity)
+  if (password.length < 8) {
+    showError('Password must be at least 8 characters long');
+    return;
+  }
+  
+  // Check password complexity
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+  const complexityCount = [hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar].filter(Boolean).length;
+  
+  if (complexityCount < 3) {
+    showError('Password must contain at least 3 of: uppercase, lowercase, number, special character');
     return;
   }
   
@@ -1090,7 +1099,7 @@ async function handleSignUp(event) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ name, email, password })
     });
     
     const data = await response.json();

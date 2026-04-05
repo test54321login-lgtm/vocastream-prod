@@ -5,13 +5,25 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const axios = require('axios');
 const path = require('path');
+const helmet = require('helmet');
+const morgan = require('morgan');
 require('dotenv').config();
 
 const protect = require('./middleware/authMiddleware');
 const { validateRegistration, validateLogin } = require('./middleware/validate');
-const { authLimiter } = require('./middleware/rateLimiter');
+const { authLimiter, ttsLimiter } = require('./middleware/rateLimiter');
 
 const app = express();
+
+// Security headers
+app.use(helmet());
+
+// Request logging
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('combined'));
+} else {
+  app.use(morgan('dev'));
+}
 
 // Middleware
 app.use(express.json());
@@ -27,6 +39,7 @@ app.use(cors({
 // --- 1. DATABASE SCHEMA ---
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  name: { type: String, trim: true, default: '' },
   password: { type: String, required: true },
   tier: { type: String, default: 'free' },
   createdAt: { type: Date, default: Date.now },
@@ -46,7 +59,7 @@ const User = mongoose.model('User', userSchema);
 // User Registration
 app.post('/api/auth/register', authLimiter, validateRegistration, async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
     
     // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -61,6 +74,7 @@ app.post('/api/auth/register', authLimiter, validateRegistration, async (req, re
     // Create user
     const user = await User.create({ 
       email: email.toLowerCase(), 
+      name: name ? name.trim() : '',
       password: hashedPassword 
     });
     
@@ -102,6 +116,7 @@ app.post('/api/auth/login', authLimiter, validateLogin, async (req, res) => {
       token,
       user: { 
         email: user.email, 
+        name: user.name,
         tier: user.tier,
         createdAt: user.createdAt
       }
@@ -127,32 +142,39 @@ app.get('/api/auth/me', protect, async (req, res) => {
 });
 
 // --- 3. AI VOICE GENERATION (The Core) ---
-app.post('/api/content/tts-voice', protect, async (req, res) => {
+app.post('/api/content/tts-voice', protect, ttsLimiter, async (req, res) => {
   try {
     const { text, lang } = req.body;
     
     // Validate input
-    if (!text || text.trim().length === 0) {
+    if (!text || typeof text !== 'string' || text.trim().length === 0) {
       return res.status(400).json({ error: 'Text is required' });
     }
     
-    if (text.length > 5000) {
+    // Sanitize input - remove potentially dangerous characters
+    const sanitizedText = text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').trim();
+    
+    if (sanitizedText.length > 5000) {
       return res.status(400).json({ error: 'Text exceeds maximum length of 5000 characters' });
     }
     
-    const KAGGLE_URL = process.env.KAGGLE_URL || "https://your-ngrok-url.ngrok-free.dev/generate-internal";
-    const INTERNAL_SECRET = process.env.INTERNAL_SECRET || "SELLSHOUT_INTERNAL_SECRET_99";
+    if (!process.env.KAGGLE_URL) {
+      return res.status(500).json({ error: 'AI engine not configured' });
+    }
+    if (!process.env.INTERNAL_SECRET) {
+      return res.status(500).json({ error: 'Internal server misconfiguration' });
+    }
     
     // Prepare form data for Kaggle
     const formData = new URLSearchParams();
-    formData.append('text', text);
+    formData.append('text', sanitizedText);
     formData.append('lang', lang || 'en');
     
     // Send request to Kaggle AI engine
-    const response = await axios.post(KAGGLE_URL, formData, {
+    const response = await axios.post(process.env.KAGGLE_URL, formData, {
       responseType: 'arraybuffer',
       headers: { 
-        'X-Internal-Key': INTERNAL_SECRET,
+        'X-Internal-Key': process.env.INTERNAL_SECRET,
         'ngrok-skip-browser-warning': 'true',
         'Content-Type': 'application/x-www-form-urlencoded'
       },

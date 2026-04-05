@@ -40,7 +40,32 @@ const apiLimiter = rateLimit({
   legacyHeaders: false
 });
 
+/**
+ * Rate limiter for TTS endpoints
+ * Limits to 10 requests per minute per user to prevent abuse
+ */
+const ttsLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // 10 requests per minute
+  message: { 
+    error: 'Too many TTS requests, please try again later',
+    retryAfter: '1 minute'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({
+      error: 'Too many TTS requests, please try again later',
+      retryAfter: '1 minute'
+    });
+  },
+  keyGenerator: (req) => {
+    return req.user ? req.user.id : req.ip;
+  }
+});
+
 module.exports = {
   authLimiter,
-  apiLimiter
+  apiLimiter,
+  ttsLimiter
 };

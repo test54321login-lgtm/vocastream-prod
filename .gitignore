@@ -7,7 +7,6 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
 yarn.lock
 
 # Environment variables
@@ -19,12 +18,10 @@ yarn.lock
 
 # Backend
 backend/node_modules/
-backend/package-lock.json
 backend/*.log
 
 # Frontend  
 frontend/node_modules/
-frontend/package-lock.json
 frontend/*.log
 
 # OS generated files
@@ -98,15 +95,8 @@ outputs/
 *.crt
 *.p12
 
-# Docker
-.dockerignore
-docker-compose.override.yml
-
-# Kubernetes
-*.kubeconfig
-
 # Misc
 *.bak
 *.orig
-*__pycache__/
-*.pyc
+ *__pycache__/
+ *.pyc
