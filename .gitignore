@@ -100,3 +100,5 @@ outputs/
 *.orig
  *__pycache__/
  *.pyc
+.vercel
+.env*.local

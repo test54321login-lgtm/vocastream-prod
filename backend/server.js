@@ -7,6 +7,9 @@ const axios = require('axios');
 const path = require('path');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const multer = require('multer');
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 require('dotenv').config();
 
 const protect = require('./middleware/authMiddleware');
@@ -198,6 +201,111 @@ app.post('/api/content/tts-voice', protect, ttsLimiter, async (req, res) => {
     }
     
     res.status(500).json({ error: "AI engine is currently unavailable" });
+  }
+});
+
+// Configure multer for file uploads
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
+
+// --- FILE EXTRACTION ENDPOINTS ---
+
+// Extract text from PDF
+app.post('/api/content/extract-pdf', protect, ttsLimiter, upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No PDF file provided' });
+    }
+
+    if (req.file.mimetype !== 'application/pdf') {
+      return res.status(400).json({ error: 'File must be a PDF' });
+    }
+
+    const data = await pdfParse(req.file.buffer);
+    res.json({ text: data.text });
+  } catch (error) {
+    console.error('PDF extraction error:', error.message);
+    res.status(500).json({ error: 'Failed to extract text from PDF' });
+  }
+});
+
+// Extract text from DOCX
+app.post('/api/content/extract-docx', protect, ttsLimiter, upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No DOCX file provided' });
+    }
+
+    const validTypes = [
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-word.document.macroEnabled'
+    ];
+    
+    if (!validTypes.includes(req.file.mimetype)) {
+      return res.status(400).json({ error: 'File must be a DOCX' });
+    }
+
+    const result = await mammoth.extractRawText({ buffer: req.file.buffer });
+    res.json({ text: result.value });
+  } catch (error) {
+    console.error('DOCX extraction error:', error.message);
+    res.status(500).json({ error: 'Failed to extract text from DOCX' });
+  }
+});
+
+// Proxy URL fetch to bypass CORS
+app.post('/api/content/fetch-url', protect, ttsLimiter, async (req, res) => {
+  try {
+    const { url } = req.body;
+
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
+    }
+
+    // Validate URL to prevent SSRF
+    let validatedUrl;
+    try {
+      validatedUrl = new URL(url);
+    } catch (e) {
+      return res.status(400).json({ error: 'Invalid URL format' });
+    }
+
+    // Only allow http and https
+    if (!['http:', 'https:'].includes(validatedUrl.protocol)) {
+      return res.status(400).json({ error: 'Only HTTP and HTTPS URLs are allowed' });
+    }
+
+    // SSRF protection: Check for private/localhost IPs
+    const hostname = validatedUrl.hostname;
+    const isPrivateIP = /^10\.\d+\.\d+\.\d+$/.test(hostname) ||
+      /^192\.168\.\d+\.\d+$/.test(hostname) ||
+      /^172\.(1[6-9]|2\d|3[01])\.\d+\.\d+$/.test(hostname) ||
+      hostname === 'localhost' ||
+      hostname === '127.0.0.1' ||
+      hostname === '0.0.0.0';
+    
+    if (isPrivateIP) {
+      return res.status(400).json({ error: 'Access to private/localhost addresses is not allowed' });
+    }
+
+    const response = await axios.get(url, { 
+      timeout: 30000,
+      responseType: 'text',
+      maxRedirects: 5,
+      headers: {
+        'User-Agent': 'VOCASTREAM/1.0'
+      }
+    });
+
+    res.json({ text: response.data });
+  } catch (error) {
+    console.error('URL fetch error:', error.message);
+    if (error.code === 'ECONNABORTED') {
+      return res.status(504).json({ error: 'Request timed out' });
+    }
+    res.status(500).json({ error: 'Failed to fetch URL' });
   }
 });
 

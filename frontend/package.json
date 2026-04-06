@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "live-server . --port=3000 --open=/index.html",
     "start": "live-server . --port=3000 --open=/index.html",
-    "build": "echo 'No build step required for static files'"
+    "build": "npx tailwindcss -o tailwind-output.css --minify && echo Build complete"
   },
   "keywords": [
     "text-to-speech",
@@ -21,6 +21,9 @@
     "tesseract.js": "^4.1.1"
   },
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "autoprefixer": "^10.4.27",
+    "live-server": "^1.2.2",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.19"
   }
 }

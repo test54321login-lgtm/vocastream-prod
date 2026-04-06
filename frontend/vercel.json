@@ -7,15 +7,11 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "$BACKEND_URL/api/$1"
+      "dest": "https://vocastream-prod.onrender.com/api/$1"
     },
     {
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ],
-  "env": {
-    "VITE_API_URL": "@vocastream-api-url",
-    "BACKEND_URL": "@vocastream-backend-url"
-  }
+  ]
 }

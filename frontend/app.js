@@ -19,6 +19,7 @@ const CONFIG = {
   API_KEY: '',      // Will be set after authentication
   MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
   SUPPORTED_IMAGE_FORMATS: ['image/jpeg', 'image/png', 'image/bmp', 'image/tiff'],
+  SUPPORTED_DOCUMENT_FORMATS: ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
   REQUEST_TIMEOUT: 30000, // 30 seconds
 };
 
@@ -683,8 +684,14 @@ async function handleFileUpload(event) {
   showStatus('Processing file with OCR...');
   
   try {
-    // Perform OCR on the uploaded file
-    const extractedText = await performOCR(file);
+    let extractedText;
+    const isDocument = CONFIG.SUPPORTED_DOCUMENT_FORMATS.includes(file.type);
+    
+    if (isDocument) {
+      extractedText = await extractDocument(file);
+    } else {
+      extractedText = await performOCR(file);
+    }
     
     // Update the text area with extracted text
     if (elements.textArea) {
@@ -692,10 +699,10 @@ async function handleFileUpload(event) {
       updateCharacterCount();
     }
     
-    showStatus('OCR completed successfully. Click "Generate Speech" to convert to audio.', 'success');
+    showStatus('Text extraction completed successfully. Click "Generate Speech" to convert to audio.', 'success');
   } catch (error) {
-    console.error('OCR processing error:', error);
-    showError(`OCR processing failed: ${error.message}`);
+    console.error('Text extraction error:', error);
+    showError(`Text extraction failed: ${error.message}`);
   } finally {
     state.isProcessing = false;
     // Reset file input
@@ -714,8 +721,9 @@ function validateFile(file) {
   }
   
   // Check file type
-  if (!CONFIG.SUPPORTED_IMAGE_FORMATS.includes(file.type)) {
-    showError(`Unsupported file type. Supported formats: ${CONFIG.SUPPORTED_IMAGE_FORMATS.join(', ')}`);
+  const supportedTypes = [...CONFIG.SUPPORTED_IMAGE_FORMATS, ...CONFIG.SUPPORTED_DOCUMENT_FORMATS];
+  if (!supportedTypes.includes(file.type)) {
+    showError(`Unsupported file type. Supported formats: ${[...CONFIG.SUPPORTED_IMAGE_FORMATS, ...CONFIG.SUPPORTED_DOCUMENT_FORMATS].join(', ')}`);
     return false;
   }
   
@@ -729,6 +737,37 @@ function formatFileSize(bytes) {
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Extract text from PDF or DOCX using backend API
+async function extractDocument(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  let endpoint;
+  if (file.type === 'application/pdf') {
+    endpoint = '/api/content/extract-pdf';
+  } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    endpoint = '/api/content/extract-docx';
+  } else {
+    throw new Error('Unsupported document type');
+  }
+  
+  const response = await fetch(CONFIG.API_BASE_URL + endpoint, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${state.token}`
+    },
+    body: formData
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to extract document text');
+  }
+  
+  const data = await response.json();
+  return data.text;
 }
 
 // Perform OCR on the uploaded file using Tesseract.js
@@ -788,15 +827,22 @@ async function handleFetchUrl() {
   showStatus('Fetching content from URL...');
   
   try {
-    // Note: Due to CORS restrictions, this may not work for all URLs
-    // In a production environment, you would use a backend proxy
-    const response = await fetch(url);
+    const response = await fetch(CONFIG.API_BASE_URL + '/api/content/fetch-url', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${state.token}`
+      },
+      body: JSON.stringify({ url })
+    });
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch URL: ${response.status} ${response.statusText}`);
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to fetch URL');
     }
     
-    const text = await response.text();
+    const data = await response.json();
+    const text = data.text;
     
     // Update the text area with fetched content
     if (elements.textArea) {
