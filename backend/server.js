@@ -8,7 +8,7 @@ const path = require('path');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const multer = require('multer');
-const pdfParse = require('pdf-parse');
+const pdfParse = require('@mattjohnpowell/pdf-parse');
 const mammoth = require('mammoth');
 require('dotenv').config();
 
