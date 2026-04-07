@@ -38,6 +38,8 @@ const state = {
   apiKey: '',
   currentAudio: null,
   isPlaying: false,
+  isSpeechInterrupted: false,
+  isWebSpeechPlaying: false,
   // Authentication state
   isAuthenticated: false,
   user: null,
@@ -538,7 +540,12 @@ async function handleGenerateSpeech() {
     showStatus('Speech generated successfully!', 'success');
   } catch (error) {
     console.error('Error generating speech:', error);
-    showError(`Failed to generate speech: ${error.message}`);
+    // Don't show error message for interrupted speech
+    if (error.message && (error.message.includes('interrupted') || error.message.includes('canceled'))) {
+      showStatus('Speech generation stopped', 'info');
+    } else {
+      showError(`Failed to generate speech: ${error.message}`);
+    }
   } finally {
     state.isProcessing = false;
   }
@@ -590,12 +597,29 @@ function generateWithWebSpeechAPI(text) {
       }
     }
     
+    utterance.onstart = () => {
+      state.isWebSpeechPlaying = true;
+    };
+    
     utterance.onend = () => {
-      resolve();
+      state.isWebSpeechPlaying = false;
+      if (state.isSpeechInterrupted) {
+        state.isSpeechInterrupted = false;
+        resolve(); // Speech was interrupted, resolve successfully
+      } else {
+        resolve();
+      }
     };
     
     utterance.onerror = (event) => {
-      reject(new Error(`Speech synthesis error: ${event.error}`));
+      state.isWebSpeechPlaying = false;
+      // Handle interruption gracefully - don't treat as error
+      if (event.error === 'interrupted' || event.error === 'canceled') {
+        state.isSpeechInterrupted = false;
+        resolve(); // Speech was interrupted, not failed
+      } else {
+        reject(new Error(`Speech synthesis error: ${event.error}`));
+      }
     };
     
     window.speechSynthesis.speak(utterance);
@@ -950,6 +974,12 @@ function toggleAudioPlayback() {
 
 // Stop audio playback and reset
 function stopAudio() {
+  // Also cancel any ongoing Web Speech API speech
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+    state.isWebSpeechPlaying = false;
+  }
+  
   if (state.currentAudio) {
     state.currentAudio.pause();
     state.currentAudio.currentTime = 0;
@@ -957,7 +987,7 @@ function stopAudio() {
     showStatus('Audio stopped');
     updatePlaybackButtons();
   } else {
-    showStatus('No audio to stop. Generate speech first.');
+    showStatus('Audio stopped');
   }
 }
 
