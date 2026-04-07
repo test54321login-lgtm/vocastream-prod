@@ -19,7 +19,7 @@ const CONFIG = {
   API_KEY: '',      // Will be set after authentication
   MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
   SUPPORTED_IMAGE_FORMATS: ['image/jpeg', 'image/png', 'image/bmp', 'image/tiff'],
-  SUPPORTED_DOCUMENT_FORMATS: ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  SUPPORTED_DOCUMENT_FORMATS: ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-word.document.macroEnabled'],
   REQUEST_TIMEOUT: 30000, // 30 seconds
 };
 
@@ -763,35 +763,77 @@ function formatFileSize(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// Extract text from PDF or DOCX using backend API
+// Extract text from PDF or DOCX using client-side libraries
 async function extractDocument(file) {
-  const formData = new FormData();
-  formData.append('file', file);
+  showStatus('Parsing document client-side...');
   
-  let endpoint;
   if (file.type === 'application/pdf') {
-    endpoint = '/api/content/extract-pdf';
-  } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-    endpoint = '/api/content/extract-docx';
+    return await extractPDFClientSide(file);
+  } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+             file.type === 'application/vnd.ms-word.document.macroEnabled') {
+    return await extractDOCXClientSide(file);
   } else {
     throw new Error('Unsupported document type');
   }
-  
-  const response = await fetch(CONFIG.API_BASE_URL + endpoint, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${state.token}`
-    },
-    body: formData
-  });
-  
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to extract document text');
+}
+
+// Extract text from PDF using PDF.js (client-side)
+async function extractPDFClientSide(file) {
+  try {
+    // Dynamically load PDF.js if not already loaded
+    if (typeof pdfjsLib === 'undefined') {
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+    }
+    
+    // Set the worker source for PDF.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    
+    let fullText = '';
+    const totalPages = pdf.numPages;
+    
+    for (let i = 1; i <= totalPages; i++) {
+      showStatus(`Extracting text from PDF page ${i}/${totalPages}...`);
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      
+      const pageText = textContent.items.map(item => item.str).join(' ');
+      fullText += pageText + '\n\n';
+    }
+    
+    if (!fullText.trim()) {
+      throw new Error('No text found in PDF. The PDF may contain only images. Try using OCR for scanned PDFs.');
+    }
+    
+    return fullText.trim();
+  } catch (error) {
+    console.error('PDF extraction error:', error);
+    throw new Error(`Failed to extract text from PDF: ${error.message}`);
   }
-  
-  const data = await response.json();
-  return data.text;
+}
+
+// Extract text from DOCX using Mammoth.js (client-side)
+async function extractDOCXClientSide(file) {
+  try {
+    // Dynamically load Mammoth.js if not already loaded
+    if (typeof mammoth === 'undefined') {
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+    }
+    
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+    
+    if (!result.value.trim()) {
+      throw new Error('No text found in DOCX file');
+    }
+    
+    return result.value.trim();
+  } catch (error) {
+    console.error('DOCX extraction error:', error);
+    throw new Error(`Failed to extract text from DOCX: ${error.message}`);
+  }
 }
 
 // Perform OCR on the uploaded file using Tesseract.js
