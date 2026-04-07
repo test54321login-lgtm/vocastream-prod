@@ -91,6 +91,13 @@ const elements = {
   playButton: document.getElementById('play-audio-btn'),
   downloadButton: document.getElementById('download-audio-btn'),
   
+  // Playback Controls
+  playBtn: document.getElementById('play-btn'),
+  pauseBtn: document.getElementById('pause-btn'),
+  stopBtn: document.getElementById('stop-btn'),
+  downloadBtn: document.getElementById('download-btn'),
+  playbackControls: document.getElementById('playback-controls'),
+  
   // Input Sections
   uploadSection: document.getElementById('upload-section'),
   linkSection: document.getElementById('link-section'),
@@ -325,6 +332,20 @@ function bindEventListeners() {
   // Download button
   if (elements.downloadButton) {
     elements.downloadButton.addEventListener('click', downloadAudio);
+  }
+  
+  // Playback controls
+  if (elements.playBtn) {
+    elements.playBtn.addEventListener('click', toggleAudioPlayback);
+  }
+  if (elements.pauseBtn) {
+    elements.pauseBtn.addEventListener('click', toggleAudioPlayback);
+  }
+  if (elements.stopBtn) {
+    elements.stopBtn.addEventListener('click', stopAudio);
+  }
+  if (elements.downloadBtn) {
+    elements.downloadBtn.addEventListener('click', downloadAudio);
   }
   
   // Text area character counter
@@ -633,16 +654,19 @@ async function generateWithNaturalVoiceAPI(text) {
     const audioUrl = URL.createObjectURL(audioBlob);
     const audio = new Audio(audioUrl);
     state.currentAudio = audio;
+    showPlaybackControls();
     
     // Play the audio
     await audio.play();
     state.isPlaying = true;
+    updatePlaybackButtons();
     
     // Clean up object URL after playback
     audio.onended = () => {
       URL.revokeObjectURL(audioUrl);
       state.isPlaying = false;
       state.currentAudio = null;
+      updatePlaybackButtons();
     };
     
   } catch (error) {
@@ -870,13 +894,48 @@ function toggleAudioPlayback() {
       state.currentAudio.pause();
       state.isPlaying = false;
       showStatus('Audio paused');
+      updatePlaybackButtons();
     } else {
       state.currentAudio.play();
       state.isPlaying = true;
       showStatus('Audio playing');
+      updatePlaybackButtons();
     }
   } else {
     showStatus('No audio to play. Generate speech first.');
+  }
+}
+
+// Stop audio playback and reset
+function stopAudio() {
+  if (state.currentAudio) {
+    state.currentAudio.pause();
+    state.currentAudio.currentTime = 0;
+    state.isPlaying = false;
+    showStatus('Audio stopped');
+    updatePlaybackButtons();
+  } else {
+    showStatus('No audio to stop. Generate speech first.');
+  }
+}
+
+// Update playback button visibility based on state
+function updatePlaybackButtons() {
+  if (elements.playBtn && elements.pauseBtn && elements.playbackControls) {
+    if (state.isPlaying) {
+      elements.playBtn.classList.add('hidden');
+      elements.pauseBtn.classList.remove('hidden');
+    } else {
+      elements.playBtn.classList.remove('hidden');
+      elements.pauseBtn.classList.add('hidden');
+    }
+  }
+}
+
+// Show playback controls when audio is ready
+function showPlaybackControls() {
+  if (elements.playbackControls) {
+    elements.playbackControls.classList.remove('hidden');
   }
 }
 
@@ -958,6 +1017,12 @@ function resetStudio() {
     state.currentAudio = null;
     state.isPlaying = false;
   }
+  
+  // Hide playback controls
+  if (elements.playbackControls) {
+    elements.playbackControls.classList.add('hidden');
+  }
+  updatePlaybackButtons();
   
   showStatus('Studio reset to default state', 'success');
 }
