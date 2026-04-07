@@ -295,7 +295,17 @@ app.post('/api/content/fetch-url', protect, ttsLimiter, async (req, res) => {
       responseType: 'text',
       maxRedirects: 5,
       headers: {
-        'User-Agent': 'VOCASTREAM/1.0'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Cache-Control': 'max-age=0'
       }
     });
 
@@ -305,7 +315,22 @@ app.post('/api/content/fetch-url', protect, ttsLimiter, async (req, res) => {
     if (error.code === 'ECONNABORTED') {
       return res.status(504).json({ error: 'Request timed out' });
     }
-    res.status(500).json({ error: 'Failed to fetch URL' });
+    if (error.code === 'ENOTFOUND') {
+      return res.status(502).json({ error: 'DNS lookup failed: Host not found' });
+    }
+    if (error.code === 'ECONNREFUSED') {
+      return res.status(502).json({ error: 'Connection refused: Server is not accepting requests' });
+    }
+    if (error.code === 'ETIMEDOUT') {
+      return res.status(504).json({ error: 'Connection timed out' });
+    }
+    if (error.code === 'ERR_NETWORK') {
+      return res.status(502).json({ error: 'Network error: ' + error.message });
+    }
+    if (error.response) {
+      return res.status(error.response.status).json({ error: 'Remote server returned ' + error.response.status + ': ' + error.response.statusText });
+    }
+    res.status(500).json({ error: 'Failed to fetch URL: ' + error.message });
   }
 });
 
