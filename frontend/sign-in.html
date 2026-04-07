@@ -2,12 +2,17 @@
 
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta name="theme-color" content="#0d0e11">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VOCASTREAM">
 <title>VOCASTREAM | Sign In</title>
 <link rel="stylesheet" href="tailwind-output.css">
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="manifest" href="manifest.json">
 
 <style>
         .material-symbols-outlined {
@@ -150,5 +155,14 @@
 </div>
 </footer>
 </div>
-<script src="app.js"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('VOCASTREAM PWA registered:', reg.scope))
+          .catch(err => console.log('PWA registration failed:', err));
+      });
+    }
+  </script>
+  <script src="app.js"></script>
 </body></html>

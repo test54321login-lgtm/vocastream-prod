@@ -2,12 +2,17 @@
 
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta name="theme-color" content="#0d0e11">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VOCASTREAM">
 <title>VOCASTREAM | Architecting Sound</title>
 <link rel="stylesheet" href="tailwind-output.css">
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="manifest" href="manifest.json">
 
 <style>
         .material-symbols-outlined {
@@ -21,6 +26,12 @@
         }
         .ease-out-expo {
             transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .mobile-menu-open #mobile-menu-panel {
+            transform: translateX(0) !important;
+        }
+        .mobile-menu-open #mobile-menu {
+            display: block;
         }
     </style>
 </head>
@@ -36,9 +47,30 @@
 <a href="sign-up.html">
 <button class="bg-gradient-to-r from-primary to-secondary text-on-primary font-['Manrope'] font-bold py-2 px-6 rounded-full scale-95 active:scale-90 transition-transform uppercase tracking-wider text-xs">get started
                 </button></a></div>
-<button class="md:hidden material-symbols-outlined text-secondary">menu</button>
+<button id="mobile-menu-btn" class="md:hidden material-symbols-outlined text-secondary">menu</button>
 </div>
 </nav>
+<!-- Mobile Menu Overlay -->
+<div id="mobile-menu" class="fixed inset-0 z-[60] hidden">
+<div id="mobile-menu-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+<div id="mobile-menu-panel" class="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-[#0d0e11] border-l border-[#47484b]/15 shadow-2xl transform translate-x-full transition-transform duration-300 ease-out-expo">
+<div class="flex justify-between items-center px-6 py-5 border-b border-[#47484b]/15">
+<span class="text-xl font-bold tracking-tight text-[#faf8fd]">Menu</span>
+<button id="mobile-menu-close" class="material-symbols-outlined text-secondary hover:text-[#faf8fd] transition-colors">close</button>
+</div>
+<div class="flex flex-col gap-2 p-4">
+<a class="font-['Manrope'] font-bold tracking-[0.04em] uppercase text-sm text-[#faf8fd]/70 hover:text-[#faf8fd] hover:bg-[#47484b]/10 py-3 px-4 rounded-xl transition-all duration-300" href="#">Home</a>
+<a class="font-['Manrope'] font-bold tracking-[0.04em] uppercase text-sm text-[#faf8fd]/70 hover:text-[#faf8fd] hover:bg-[#47484b]/10 py-3 px-4 rounded-xl transition-all duration-300" href="studio.html">Studio</a>
+<a class="font-['Manrope'] font-bold tracking-[0.04em] uppercase text-sm text-[#faf8fd]/70 hover:text-[#faf8fd] hover:bg-[#47484b]/10 py-3 px-4 rounded-xl transition-all duration-300" href="#how-to-use">How to Use</a>
+<a class="font-['Manrope'] font-bold tracking-[0.04em] uppercase text-sm text-[#faf8fd]/70 hover:text-[#faf8fd] hover:bg-[#47484b]/10 py-3 px-4 rounded-xl transition-all duration-300" href="#features">Features</a>
+<div class="mt-4 pt-4 border-t border-[#47484b]/15">
+<a href="sign-up.html">
+<button class="w-full bg-gradient-to-r from-primary to-secondary text-on-primary font-['Manrope'] font-bold py-3 px-6 rounded-full uppercase tracking-wider text-xs">Get Started</button>
+</a>
+</div>
+</div>
+</div>
+</div>
 <main class="relative pt-24">
 <!-- Hero Section -->
 <section class="relative min-h-[921px] flex flex-col items-center justify-center px-6 text-center overflow-hidden">
@@ -201,5 +233,38 @@
 </div>
 </div>
 </footer>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('VOCASTREAM PWA registered:', reg.scope))
+        .catch(err => console.log('PWA registration failed:', err));
+    });
+  }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    function openMobileMenu() {
+      document.body.classList.add('mobile-menu-open');
+    }
+    
+    function closeMobileMenu() {
+      document.body.classList.remove('mobile-menu-open');
+    }
+    
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+    if (mobileMenuClose) mobileMenuClose.addEventListener('click', closeMobileMenu);
+    if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+    
+    document.querySelectorAll('#mobile-menu a').forEach(function(link) {
+      link.addEventListener('click', closeMobileMenu);
+    });
+  });
+</script>
 <script src="app.js"></script>
 </body></html>

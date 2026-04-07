@@ -2,12 +2,17 @@
 
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta name="theme-color" content="#0d0e11">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VOCASTREAM">
 <title>VOCASTREAM | Create Your Sonic Identity</title>
 <link rel="stylesheet" href="tailwind-output.css">
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="manifest" href="manifest.json">
 
 <style>
       .material-symbols-outlined {
@@ -170,5 +175,14 @@
 <img data-alt="Cyberpunk abstract digital background with glowing blue nodes and network lines in a deep obsidian space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtyJWvfFx7gxVnAslIeE2q4GIhysM-WDUTczWEICpj4fsN-VekYo-uHjzSS2fu1DoogyhkzCJVNZPSVznTMq5of1sg-CuKR4hXJKiuXaZLt9ewkyLW4_dTWFl-gtdhHnzwGiXSIxjPn6Muj3CJRWsz_OY_Q7JKCg_4bd7_AOKgqE0RcGDSvb8wnxvidDYReoVywkE8v9jss_WQ63LE_UaTAsKPocpaJGNVDAaRQqfOeEZz0Jo6qGMnXMnAJliyi6Lk_5wUynfwrDf3"/>
 <img data-alt="High fidelity audio waveform visualization with vibrant cyan and magenta light trails on a dark matte surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0z3kbKrh68a9rhYKNDGC1kRl0MCN4YdHGs6jxli5FqTTTA4rIZc3WUbe3NiV_Vx40OubeD6ZG8MB-L8m7-tnTcpLYmdxIxbGby_oSZXPIgTIP1rdaEsTAQ8G6kAWyZwfIszapcvEq8H3b9Ymg40iHppSgVasFUD9ZdthbDBUvTgA8rsqRImTpmQZBz7T5vPJbcj5gFqKe0cW9v8MfEHJjtKvloYnZaFk_Fkoe3mzR-YKfYDGKEOVGN_NkGdtvmJ8fp79ZT1o9eMng"/>
 </div>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('VOCASTREAM PWA registered:', reg.scope))
+        .catch(err => console.log('PWA registration failed:', err));
+    });
+  }
+</script>
 <script src="app.js"></script>
 </body></html>
