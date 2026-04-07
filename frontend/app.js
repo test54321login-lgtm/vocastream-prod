@@ -827,7 +827,7 @@ async function handleFetchUrl() {
   showStatus('Fetching content from URL...');
   
   try {
-    const response = await fetch(CONFIG.API_BASE_URL + '/api/content/fetch-url', {
+    const response = await fetch(CONFIG.API_BASE_URL + '/content/fetch-url', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
